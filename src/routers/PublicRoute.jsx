@@ -1,10 +1,10 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 
-export const PublicRoute = ({ children, uid }) => {
+export const PublicRoute = ({ children, isAuthenticated }) => {
   
 
-  return !uid ? children : <Navigate to="/" />;
+  return !isAuthenticated ? children : <Navigate to="/" />;
 
 };
 

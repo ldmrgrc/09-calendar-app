@@ -12,7 +12,7 @@ import { PublicRoute } from './PublicRoute'
 export const AppRouter = () => {
 
     const dispatch = useDispatch()
-    const { checking, uid } = useSelector(state => state.auth)
+    const { checking, isAuthenticated } = useSelector(state => state.auth)
 
     useEffect(() => {
 
@@ -28,9 +28,9 @@ export const AppRouter = () => {
         <BrowserRouter>
             <Routes>
                 <Route
-                    path="/*"
+                    path="/auth/*"
                     element={
-                        <PublicRoute uid={!!uid}>
+                        <PublicRoute isAuthenticated={isAuthenticated}>
                             <AuthRoute />
                         </PublicRoute>
                     }
@@ -39,7 +39,7 @@ export const AppRouter = () => {
                 <Route
                     path="/"
                     element={
-                        <PrivateRoute uid={!!uid}>
+                        <PrivateRoute isAuthenticated={isAuthenticated}>
                             <CalendarScreen />
                         </PrivateRoute>
                     }
