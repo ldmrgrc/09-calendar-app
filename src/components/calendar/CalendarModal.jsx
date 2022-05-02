@@ -1,14 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import moment from 'moment';
+import React from 'react'
 
 import Modal from 'react-modal/lib/components/Modal';
 import DateTimePicker from 'react-datetime-picker';
-import Swal from 'sweetalert2';
-import { useDispatch, useSelector } from 'react-redux';
-
-import { uiCloseModal } from '../../actions/ui';
-import { calendarAddNewEvent, calendarClearActiveEvent, calendarUpdateEvent } from '../../actions/events';
-
+import { useSelector } from 'react-redux';
 
 const customStyles = {
     content: {
@@ -24,119 +18,23 @@ const customStyles = {
 
 Modal.setAppElement('#root')
 
-const defaultStart = moment().minutes(0).seconds(0).milliseconds(0).add(1, 'hours');
-const defaultEnd = defaultStart.clone().add(1, 'hours');
-
-const initEvent = {
-    title: '',
-    desc: '',
-    start: defaultStart.toDate(),
-    end: defaultEnd.toDate(),
-}
-
-export const CalendarModal = () => {
-
-    const dispatch = useDispatch()
+export const CalendarModal = ({
+    handleInputChange,
+    handelStartDateChange,
+    handelEndDateChange,
+    handleSubmitForm,
+    closeModal,
+    startDate,
+    endDate,
+    formValues,
+    isValid,
+}) => {
 
     const { modalIsOpen } = useSelector(state => state.ui)
     const { activeEvent } = useSelector(state => state.calendar)
-
-    const [startDate, setStartDate] = useState(defaultStart.toDate())
-    const [endDate, setEndDate] = useState(defaultEnd.toDate())
-
-    const [isValid, setIsValid] = useState({ valid: true, message: '' })
+    const { title, desc, } = formValues;
     const { valid, message } = isValid;
-
-    const [formValues, setFormValues] = useState(initEvent);
-    const { title, desc, start, end } = formValues;
-
-    useEffect(() => {
-
-        if (activeEvent) {
-            setFormValues(activeEvent);
-        } else {
-            setFormValues(initEvent);
-        }
-
-    }, [activeEvent, setFormValues])
-
-    const handleInputChange = ({ target }) => {
-        setFormValues({
-            ...formValues,
-            [target.name]: target.value
-        });
-    }
-
-    const closeModal = () => {
-        dispatch(uiCloseModal())
-        dispatch(calendarClearActiveEvent())
-        setFormValues(initEvent)
-    }
-
-    const handelStartDateChange = (e) => {
-        setStartDate(e);
-        setFormValues({
-            ...formValues,
-            start: e
-        });
-    }
-
-    const handelEndDateChange = (e) => {
-        setEndDate(e);
-        setFormValues({
-            ...formValues,
-            end: e
-        });
-    }
-
-    const handleSubmitForm = (e) => {
-        e.preventDefault();
-
-        const momentStart = moment(start);
-        const momentEnd = moment(end);
-
-        if (momentStart.isSameOrAfter(momentEnd)) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'La fecha y hora de inicio debe ser menor a la fecha y hora fin',
-                confirmButtonText: 'Ok'
-            });
-            return;
-        }
-
-        if (title.trim() === '') {
-            setIsValid({
-                valid: false,
-                message: 'El titulo es requerido'
-            });
-            return;
-        }
-
-        if (activeEvent) {
-            dispatch(calendarUpdateEvent(formValues));
-        } else {
-
-            //TODO: enviar al servidor
-            dispatch(calendarAddNewEvent({
-                ...formValues,
-                id: new Date().getTime(),
-                user: {
-                    uid: '123',
-                    name: 'Jorge',
-                    avatar: 'https://picsum.photos/50/50'
-                }
-            }));
-        }
-
-        setIsValid({
-            valid: true,
-            message: ''
-        });
-
-        closeModal();
-    }
-
+    
     return (
         <Modal
             isOpen={modalIsOpen}
@@ -147,7 +45,7 @@ export const CalendarModal = () => {
             className="modal"
             overlayClassName="modal-overlay"
         >
-            <h1> { activeEvent ? 'Editar evento' : ' Nuevo evento' } </h1>
+            <h1> {activeEvent ? 'Editar evento' : ' Nuevo evento'} </h1>
             <hr />
             <form className="container" onSubmit={handleSubmitForm}>
 

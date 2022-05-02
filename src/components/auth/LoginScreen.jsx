@@ -1,14 +1,32 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { signIn } from "../../actions/auth";
+import { useForm } from "../../hooks/useForm";
 import "../../styles/LoginScreen.css";
 
 export const LoginScreen = () => {
+
+    const dispatch = useDispatch();
+
+    const [formLoginValues, handleLoginInputChange] = useForm({
+        email: "",
+        password: "",
+    });
+
+    const { email, password } = formLoginValues;
+
+    const handleLoginSubmit = (event) => {
+        event.preventDefault();
+        dispatch(signIn(email, password));
+    }
+
     return (
         <>
             <div className="container">
                 <div className="position-absolute top-50 start-50 translate-middle">
                     <div className="card shadow-lg">
-                        <div class="row g-0">
+                        <div className="row g-0">
 
                             <div className="col-lg-5 col-md-5 d-none d-sm-block">
                                 <img className="img-login rounded-start" src="https://res.cloudinary.com/dbjzts2r9/image/upload/v1650391975/cld-sample.jpg" alt="loginImage" />
@@ -18,7 +36,7 @@ export const LoginScreen = () => {
                                 <div className="card-body">
                                     {/* login */}
                                     <h2 className="card-title text-center mb-5">Bienvenido</h2>
-                                    <form>
+                                    <form onSubmit={ handleLoginSubmit }>
                                         <div className="mb-4">
                                             <label
                                                 htmlFor="email"
@@ -32,6 +50,9 @@ export const LoginScreen = () => {
                                                 type="email"
                                                 placeholder="Email"
                                                 autoComplete="off"
+                                                name="email"
+                                                value={email}
+                                                onChange={handleLoginInputChange}
                                             />
                                         </div>
 
@@ -47,6 +68,10 @@ export const LoginScreen = () => {
                                                 id="password"
                                                 type="password"
                                                 placeholder="password"
+                                                autoComplete="off"
+                                                name="password"
+                                                value={password}
+                                                onChange={handleLoginInputChange}
                                             />
                                         </div>
 
@@ -65,14 +90,17 @@ export const LoginScreen = () => {
                                         </div>
 
                                         <div className="d-grid">
-                                            <button className="btn btn-primary btn-block" type="submit">
+                                            <button
+                                                className="btn btn-primary btn-block"
+                                                type="submit"
+                                                 >
                                                 Login
                                             </button>
                                         </div>
                                     </form>
 
                                     <div className="my-3">
-                                        <span>No tienes una cuenta? <Link to='/register' >Registrate</Link> </span>
+                                        <span>No tienes una cuenta? <Link to='/auth/register' >Registrate</Link> </span>
                                     </div>
 
                                     {/* Redes Sociales */}

@@ -1,20 +1,19 @@
-// import { types } from "../types/types";
-import moment from "moment";
 import { types } from "../types/types";
 
+// {
+//     id: new Date().getTime(),
+//     title: 'DTS STARTS',
+//     start: moment().toDate(),
+//     end: moment().add(3, 'hours').toDate(),
+//     desc: 'Unit testing with Jest and Enzyme',
+//     user: {
+//         _id: '123',
+//         name: 'Jorge',
+//     }
+// }
+
 const initialState = {
-    events: [{
-        id: new Date().getTime(),
-        title: 'DTS STARTS',
-        start: moment().toDate(),
-        end: moment().add(3, 'hours').toDate(),
-        desc: 'Unit testing with Jest and Enzyme',
-        user: {
-          uid: '123',
-          name: 'Jorge',
-          avatar: 'https://picsum.photos/50/50'
-        }      
-      }],
+    events: [],
     activeEvent: null,
 };
 
@@ -23,7 +22,7 @@ export const calendarReducer = (state = initialState, action) => {
         case types.calendarFetchEvents:
             return {
                 ...state,
-                events: action.payload,
+                events: [...action.payload],
             };
         case types.calendarAddNewEvent:
             return {
@@ -44,14 +43,18 @@ export const calendarReducer = (state = initialState, action) => {
             return {
                 ...state,
                 events: state.events.map((event) =>
-                    event.id === action.payload.id ? action.payload : event
+                    event._id === action.payload._id ? action.payload : event
                 ),
             };
         case types.calendarDeleteEvent:
             return {
                 ...state,
-                events: state.events.filter((event) => event.id !== action.payload),
+                events: state.events.filter((event) => event._id !== action.payload),
                 activeEvent: null,
+            };
+        case types.calendarLogoutEvent:
+            return {
+                ...initialState
             };
         default:
             return state;

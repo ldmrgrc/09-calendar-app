@@ -1,6 +1,41 @@
 import React from 'react'
+import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom'
+import Swal from 'sweetalert2';
+import { signUp } from '../../actions/auth';
+import { useForm } from '../../hooks/useForm';
 
 export const RegisterScreen = () => {
+
+    const dispatch = useDispatch();
+
+    const [formRegisterValues, handleRegisterInputChange] = useForm({
+        email: "",
+        password: "",
+        rePassword: "",
+        name: "",
+        lastName: "",
+    });
+
+    const { email, password, rePassword, name, lastName } = formRegisterValues;
+
+    const handleRegisterSubmit = (event) => {
+        event.preventDefault();
+
+        if (password !== rePassword) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Las contraseñas no coinciden',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+            });
+
+            return;
+        }
+
+        dispatch(signUp(email, password, name, lastName));
+    }
+
     return (
         <>
             <div className="bg-primary">
@@ -9,13 +44,17 @@ export const RegisterScreen = () => {
                     <div className="card shadow-lg">
                         <div className="row g-0">
                             <div className="col-lg-5 col-md-5 d-none d-sm-block">
-                                <img src="https://res.cloudinary.com/dbjzts2r9/image/upload/v1650404484/minion-4_zfsswz.jpg" className="img-register rounded-start" alt="..." />
+                                <img
+                                    src="https://res.cloudinary.com/dbjzts2r9/image/upload/v1650404484/minion-4_zfsswz.jpg"
+                                    className="img-register rounded-start"
+                                    alt="..."
+                                />
                             </div>
 
                             <div className="col-lg-7 col-md-7 col-sm-12">
                                 <div className="card-body">
                                     <h2 className="card-title text-center mb-5">Register</h2>
-                                    <form>
+                                    <form onSubmit={handleRegisterSubmit}>
                                         <div className="row mt-3">
                                             <div className="col">
                                                 <div className="form-floating mb-3">
@@ -23,15 +62,28 @@ export const RegisterScreen = () => {
                                                         type="text"
                                                         className="form-control"
                                                         id="First Name"
-                                                        placeholder="name@example.com"
-                                                        autoComplete='off' />
+                                                        placeholder="First Name"
+                                                        autoComplete='off'
+                                                        name="name"
+                                                        value={name}
+                                                        onChange={handleRegisterInputChange}
+                                                    />
                                                     <label htmlFor='First Name'>First Name</label>
                                                 </div>
                                             </div>
 
                                             <div className="col">
                                                 <div className="form-floating">
-                                                    <input type="text" className="form-control" id="Last Name" placeholder="Password" />
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        id="Last Name"
+                                                        placeholder="Last Name"
+                                                        autoComplete='off'
+                                                        name="lastName"
+                                                        value={lastName}
+                                                        onChange={handleRegisterInputChange}
+                                                    />
                                                     <label htmlFor="Last Name">Last Name</label>
                                                 </div>
                                             </div>
@@ -41,19 +93,46 @@ export const RegisterScreen = () => {
                                         <div className="row mt-3">
                                             <div className='col-12'>
                                                 <div className="form-floating mb-3">
-                                                    <input type="email" className="form-control" id="email" placeholder="name@example.com" />
+                                                    <input
+                                                        type="email"
+                                                        className="form-control"
+                                                        id="email"
+                                                        placeholder="name@example.com"
+                                                        autoComplete='off'
+                                                        name="email"
+                                                        value={email}
+                                                        onChange={handleRegisterInputChange}
+                                                    />
                                                     <label htmlFor="email">Email</label>
                                                 </div>
                                             </div>
                                             <div className='col'>
                                                 <div className="form-floating">
-                                                    <input type="password" className="form-control" id="Password" placeholder="Password" />
+                                                    <input
+                                                        type="password"
+                                                        className="form-control"
+                                                        id="Password"
+                                                        placeholder="Password"
+                                                        autoComplete='off'
+                                                        name="password"
+                                                        value={password}
+                                                        onChange={handleRegisterInputChange}
+                                                    />
                                                     <label htmlFor="Password">Password</label>
                                                 </div>
                                             </div>
                                             <div className='col'>
                                                 <div className="form-floating">
-                                                    <input type="password" className="form-control" id="Re-Password" placeholder="Password" />
+                                                    <input
+                                                        type="password"
+                                                        className="form-control"
+                                                        id="Re-Password"
+                                                        placeholder="Repeat Password"
+                                                        autoComplete='off'
+                                                        name="rePassword"
+                                                        value={rePassword}
+                                                        onChange={handleRegisterInputChange}
+                                                    />
                                                     <label htmlFor="Re-Password">Password</label>
                                                 </div>
                                             </div>
@@ -63,6 +142,10 @@ export const RegisterScreen = () => {
                                             <button className="btn btn-primary" type='submit'>Register</button>
                                         </div>
                                     </form>
+
+                                    <div className="my-3">
+                                        <span>Ya tienes cuenta? <Link to='/auth/login' >Iniciar Sessión</Link> </span>
+                                    </div>
 
                                     {/* Redes Sociales */}
                                     <div className="contianer w-100 my-3">

@@ -9,11 +9,15 @@ export const types = {
     calendarSetActiveEvent: '[calendar] Set Active Event',
     calendarUpdateEvent: '[calendar] Update Event',
     calendarDeleteEvent: '[calendar] Delete Event',
+    calendarLogoutEvent: '[calendar] Logout Event',
     // Auth
-    authStart: '[auth] Start',
-    authSuccess: '[auth] Success',
-    authFail: '[auth] Fail',
+    authChecked: '[auth] Checked',
+    authStartLogin: '[auth] Start Login',
+    authLogin: '[auth] Login',
+    authRegister: '[auth] Start Register',
+    authStartRenewToken: '[auth] Start Renew Token',
     authLogout: '[auth] Logout',
+
     // User
     userFetchUser: '[user] Fetch User',
     userFetchUserSuccess: '[user] Fetch User Success',
